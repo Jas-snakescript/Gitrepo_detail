@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Analysis Results</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #0366d6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'gitrepo:home' %}" class="back-link">← Back to Search</a>
+    
+    {% if error %}
+        <div class="error">
+            <h2>Error</h2>
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {% if analysis %}
+        <h1>Analysis for {{ username }}</h1>
+        
+        <div class="section">
+            <h2>Basic Information</h2>
+            {% for key, value in analysis.Basic_Information.items %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="section">
+            <h2>Repository Analysis</h2>
+            {% for key, value in analysis.Repository_Analysis.items %}
+                <p><strong>{{ key }}:</strong> 
+                {% if key == 'Most Used Languages' %}
+                    <ul>
+                    {% for lang, count in value.items %}
+                        <li>{{ lang }}: {{ count }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    {{ value }}
+                {% endif %}
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</body>
+</html>
